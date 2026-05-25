@@ -105,8 +105,8 @@ function OptionCard({ id, title, description, image, imageAlt }) {
 
 function BenefitsLayout() {
   return (
-    <section className="-mx-4 mt-15 bg-[black] px-4 py-14 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-      <div className="mx-auto max-w-6xl rounded-3xl bg-white px-6 py-12 sm:px-10 lg:px-16 lg:py-16">
+    <section className="-mx-4 mt-15  px-4 py-14 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
+      <div className="mx-auto max-w-6xl rounded-3xl bg-gray-100 border-2 px-6 py-12 sm:px-10 lg:px-16 lg:py-16">
         <div className="grid gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
           {benefits.map(({ title, description, icon, iconBackground }) => (
             <div key={title} className="flex flex-col items-center text-center">
