@@ -106,7 +106,7 @@ export default function BestShowcaseSection() {
           {showcaseSlots.map((slot) => (
             <div
               key={slot}
-              className="scroll-stack-card relative h-[22rem] w-full overflow-hidden rounded-2xl border border-black/10 bg-white p-3 shadow-[0_16px_40px_rgba(0,0,0,0.14)] sm:h-[30rem] sm:p-4 lg:sticky lg:h-[70vh] lg:rounded-3xl lg:p-5 lg:shadow-[0_20px_60px_rgba(0,0,0,0.16)]"
+              className="scroll-stack-card relative h-88 w-full overflow-hidden rounded-2xl border border-black/10 bg-white p-3 shadow-[0_16px_40px_rgba(0,0,0,0.14)] sm:h-120 sm:p-4 lg:sticky lg:h-[70vh] lg:rounded-3xl lg:p-5 lg:shadow-[0_20px_60px_rgba(0,0,0,0.16)]"
               style={{
                 zIndex: slot + 1,
                 top: '12vh',
