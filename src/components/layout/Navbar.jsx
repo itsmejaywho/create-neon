@@ -105,11 +105,21 @@ export default function Navbar() {
           <div className="flex h-full basis-[18%] items-center justify-start gap-2 pl-3 sm:basis-1/5 sm:pl-4 lg:justify-center lg:pl-0">
             <div
               className={[
-                'font-euclid h-10 w-10 items-center justify-center rounded-full border-4 border-[#00684A] bg-white text-[#001E2B] sm:h-11 sm:w-11',
+                'font-euclid h-10 w-10 items-center justify-center rounded-full sm:h-11 sm:w-11',
+                scrolled
+                  ? 'bg-gradient-to-br from-[#00ED64] via-[#00B3FF] to-[#7C4DFF] p-[2px]'
+                  : 'border-4 border-[#00684A] bg-white text-[#001E2B]',
                 scrolled ? 'flex' : 'flex lg:hidden',
               ].join(' ')}
             >
+              <div
+                className={[
+                  'flex h-full w-full items-center justify-center rounded-full',
+                  scrolled ? 'bg-[#0b0f14] text-white' : 'bg-transparent',
+                ].join(' ')}
+              >
                 <p className="text-base font-black sm:text-[20px]">CN</p>
+              </div>
             </div>
             <span
               className={[
