@@ -1,20 +1,20 @@
 import starIcon from '../../assets/icons/star.svg'
 import heroBackground from '../../assets/icons/background.jpg'
 
-export default function Body() {
+export default function LandingHero() {
   return (
     <main className="flex min-h-screen flex-col">
       <section
         className="flex min-h-[90vh] w-full items-center bg-cover bg-center px-4 py-10 sm:px-6 lg:px-10"
         style={{ backgroundImage: `url(${heroBackground})` }}
       >
-        <div className="flex w-full max-w-6xl flex-col items-start gap-6 pt-6 sm:pt-10 lg:pl-25">
+        <div className="flex w-full max-w-6xl flex-col items-start gap-6 pt-6 sm:pt-10 lg:pl-24">
           <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[#00ED64] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#001E2B]">
             <span>People Love us</span>
             <span className="h-4 w-px bg-[#001E2B]/40" aria-hidden="true" />
             <span className="flex items-center gap-2">
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full">
-                <img src={starIcon} alt="Star" className="h-5 w-5" />
+                <img src={starIcon} alt="" className="h-5 w-5" aria-hidden="true" />
               </span>
               Trustpilot
             </span>
@@ -30,12 +30,10 @@ export default function Body() {
               <br />
               business signs
             </h1>
-            <p className="mt-4 text-sm leading-relaxed text-[#D6D3FF] sm:text-base">
-              From custom LED neon wall art to professional illuminated business
-            </p>
-            <p className="text-sm leading-relaxed text-[#D6D3FF] sm:text-base">
-              signs, we help your brand stand out, increase visibility, and leave
-              a lasting impression.
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#D6D3FF] sm:text-base">
+              From custom LED neon wall art to professional illuminated business signs,
+              we help your brand stand out, increase visibility, and leave a lasting
+              impression.
             </p>
           </div>
 
