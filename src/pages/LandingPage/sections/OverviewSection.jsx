@@ -1,3 +1,9 @@
+import freeShipping from '../../../assets/icons/freeshipping.svg'
+import affordable from '../../../assets/icons/affordable.svg'
+import protection from '../../../assets/icons/protection.svg'
+import remote from '../../../assets/icons/remote.svg'
+import efficiency from '../../../assets/icons/efficiency.svg'
+import installation from '../../../assets/icons/installation.svg'
 import customImage from '../../../assets/image/custom.webp'
 import personalImage from '../../../assets/image/personal.webp'
 import ownImage from '../../../assets/image/own.webp'
@@ -27,6 +33,51 @@ const optionCards = [
   },
 ]
 
+const benefits = [
+  {
+    title: 'Free & fast shipping',
+    description:
+      'Free shipping available! Need it faster? Choose Express Shipping for prompt delivery of your custom neon sign.',
+    icon: freeShipping,
+    iconBackground: 'bg-pink-200',
+  },
+  {
+    title: '2-year guarantee',
+    description:
+      'Do you fear e-shopping because of defective products? Fret no more! We will replace your sign in case of any malfunction.',
+    icon: protection,
+    iconBackground: 'bg-green-200',
+  },
+  {
+    title: 'Affordable prices',
+    description:
+      'We promise affordable neon signs. Share your competitors’ quotes with us and we will beat their price.',
+    icon: affordable,
+    iconBackground: 'bg-yellow-200',
+  },
+  {
+    title: 'High efficiency',
+    description:
+      'Create Neon signs are hand-made from unbreakable PVC flex that is lighter and stronger than glass tubes.',
+    icon: efficiency,
+    iconBackground: 'bg-red-100',
+  },
+  {
+    title: 'Free dimmer and remote',
+    description:
+      'Your cart is filled with freebies! Get a free dimmer, remote controller, installation kit, and installation guide.',
+    icon: remote,
+    iconBackground: 'bg-sky-200',
+  },
+  {
+    title: 'Easy installation',
+    description:
+      'Getting your neon sign installed is simple with our installation kit and guide.',
+    icon: installation,
+    iconBackground: 'bg-purple-200',
+  },
+]
+
 function OptionCard({ id, title, description, image, imageAlt }) {
   return (
     <div
@@ -49,6 +100,32 @@ function OptionCard({ id, title, description, image, imageAlt }) {
         />
       </div>
     </div>
+  )
+}
+
+function BenefitsLayout() {
+  return (
+    <section className="-mx-4 mt-15 bg-[black] px-4 py-14 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
+      <div className="mx-auto max-w-6xl rounded-3xl bg-white px-6 py-12 sm:px-10 lg:px-16 lg:py-16">
+        <div className="grid gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+          {benefits.map(({ title, description, icon, iconBackground }) => (
+            <div key={title} className="flex flex-col items-center text-center">
+              <div
+                className={`flex h-16 w-16 items-center justify-center rounded-full ${iconBackground}`}
+              >
+                <img src={icon} alt="" className="h-9 w-9" aria-hidden="true" />
+              </div>
+              <h3 className="mt-8 text-lg font-extrabold uppercase leading-tight text-black">
+                {title}
+              </h3>
+              <p className="mt-4 max-w-72 leading-relaxed text-[#001E2B]">
+                {description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -80,6 +157,8 @@ export default function OverviewSection() {
           <OptionCard key={card.title} {...card} />
         ))}
       </div>
+
+      <BenefitsLayout />
     </section>
   )
 }
