@@ -78,7 +78,7 @@ server.listen(port, host, () => {
   console.log(`Server listening on http://${host}:${port}`)
 })
 
-cron.schedule('*/30 * * * *', async () => {
+cron.schedule('*/10 * * * *', async () => {
   const keepAliveUrl =
     process.env.KEEP_ALIVE_URL ||
     process.env.RENDER_EXTERNAL_URL ||
