@@ -1,6 +1,7 @@
 import HeroSection from './sections/HeroSection'
 import OverviewSection from './sections/OverviewSection'
 import BestShowcaseSection from './sections/BestShowcaseSection'
+import LatestWorkSection from './sections/LatestWorkSection'
 
 export default function Body() {
   return (
@@ -8,6 +9,7 @@ export default function Body() {
       <HeroSection />
       <OverviewSection />
       <BestShowcaseSection />
+      <LatestWorkSection />
     </main>
   )
 }

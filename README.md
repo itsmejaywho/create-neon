@@ -18,7 +18,9 @@ Create Neon is a Vite + React landing page for a custom LED neon and illuminated
 - Product option cards for custom sign workflows
 - Benefits section highlighting shipping, guarantee, pricing, efficiency, remote, and installation
 - Scroll-stacked image showcase section
+- Latest work layout section for future project cards
 - Local font loading through Tailwind's `font-euclid` utility
+- Production Node server for Render deployment
 
 ## Getting Started
 
@@ -46,11 +48,36 @@ Preview the production build:
 npm run preview
 ```
 
+Start the production server:
+
+```bash
+npm run start
+```
+
 Run lint checks:
 
 ```bash
 npm run lint
 ```
+
+## Render Deployment
+
+Use these settings for a Render Web Service:
+
+```bash
+Build Command: npm install; npm run build
+Start Command: npm run start
+```
+
+The production server in `server.js` serves the built `dist` folder and binds to Render's `PORT` on `0.0.0.0`.
+
+Health check endpoint:
+
+```text
+/health
+```
+
+This endpoint can be used by Render Cron Jobs or external uptime checks.
 
 ## Project Structure
 
@@ -69,7 +96,7 @@ src/
   lib/                         API, utilities, and validators
   pages/
     LandingPage/
-      sections/                Hero, overview, and showcase sections
+      sections/                Hero, overview, showcase, and latest work sections
   services/                    API service layer
   store/                       Global state
 ```
@@ -87,6 +114,7 @@ The landing page is composed in `src/pages/LandingPage/index.jsx`:
 - `HeroSection`
 - `OverviewSection`
 - `BestShowcaseSection`
+- `LatestWorkSection`
 
 ## Styling
 
@@ -104,5 +132,6 @@ font-euclid
 npm run dev      # Start local development
 npm run build    # Build production assets
 npm run preview  # Preview the production build
+npm run start    # Start the production Node server
 npm run lint     # Run ESLint
 ```
