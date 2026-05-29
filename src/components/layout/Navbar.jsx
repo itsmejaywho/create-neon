@@ -4,13 +4,14 @@ import cartIcon from '../../assets/icons/cart.svg'
 import checkIcon from '../../assets/icons/check.svg'
 import homeIcon from '../../assets/icons/home.svg'
 import happyIcon from '../../assets/icons/happy.svg'
-import profileIcon from '../../assets/icons/profile.svg'
-import searchIcon from '../../assets/icons/search.svg'
 import boxIcon from '../../assets/icons/box.svg'
 import shopIcon from '../../assets/icons/shop.svg'
 import signIcon from '../../assets/icons/sign.svg'
 import signageIcon from '../../assets/icons/signage.svg'
 import trendingIcon from '../../assets/icons/trending.svg'
+import logoImage from '../../assets/image/logo.png'
+import { Search } from '@/components/animate-ui/icons/search'
+import { User } from '@/components/animate-ui/icons/user'
 
 const navIcons = [
   { src: homeIcon, label: 'Home' },
@@ -118,17 +119,17 @@ export default function Navbar() {
                   scrolled ? 'bg-[#0b0f14] text-white' : 'bg-transparent',
                 ].join(' ')}
               >
-                <p className="text-base font-black sm:text-[20px]">CN</p>
+                <p className="text-base font-black sm:text-[15px]">AAN</p>
               </div>
             </div>
-            <span
+            <img
+              src={logoImage}
+              alt="All About Neon"
               className={[
-                'font-euclid text-lg font-semibold text-[#001E2B]',
+                'h-35 w-auto object-contain',
                 scrolled ? 'hidden' : 'hidden lg:block',
               ].join(' ')}
-            >
-              CreateNeon
-            </span>
+            />
           </div>
           {scrolled && (
             <div
@@ -160,8 +161,18 @@ export default function Navbar() {
             ].join(' ')}
           >
             <div className="hidden w-full items-center justify-center gap-7 lg:flex">
-              <img src={searchIcon} alt="Search" className="h-5 w-5" />
-              <img src={profileIcon} alt="Profile" className="h-5 w-5" />
+              <Search
+                animateOnHover
+                size={22}
+                aria-label="Search"
+                className="text-[#001E2B]"
+              />
+              <User
+                animateOnHover
+                size={22}
+                aria-label="Profile"
+                className="text-[#001E2B]"
+              />
               <img src={cartIcon} alt="Cart" className="h-5 w-5" />
             </div>
             <button
