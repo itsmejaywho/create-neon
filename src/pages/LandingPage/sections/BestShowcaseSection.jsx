@@ -1,11 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import customImage from '../../../assets/image/custom.webp'
-import heroBackground from '../../../assets/image/hero-background.jpg'
-import ownImage from '../../../assets/image/own.webp'
-import personalImage from '../../../assets/image/personal.webp'
+import showcaseImage1 from '../../../assets/image/best1.jpg'
+import showcaseImage2 from '../../../assets/image/best2.jpg'
+import showcaseImage3 from '../../../assets/image/best3.jpg'
+import showcaseImage4 from '../../../assets/image/best4.jpg'
+import showcaseImage5 from '../../../assets/image/best5.jpg'
 
 const showcaseSlots = Array.from({ length: 5 }, (_, index) => index)
-const showcaseImages = [customImage, personalImage, ownImage, heroBackground]
+const showcaseImages = [
+  showcaseImage1,
+  showcaseImage2,
+  showcaseImage3,
+  showcaseImage4,
+  showcaseImage5,
+]
 
 export default function BestShowcaseSection() {
   const sectionRef = useRef(null)
