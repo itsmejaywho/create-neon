@@ -14,6 +14,8 @@ Create Neon is a Vite + React landing page for a custom LED neon and illuminated
 
 - Responsive landing page for custom neon and illuminated signs
 - Scroll-aware navigation that changes from a full-width header into a floating pill
+- In-page login modal opened from the profile icon, with backdrop close and Escape-key close
+- Password visibility toggle and Google sign-in action styling in the login modal
 - Hero section with full-background imagery and primary calls to action
 - Product option cards for custom sign workflows
 - Benefits section highlighting shipping, guarantee, pricing, efficiency, remote, and installation
@@ -97,6 +99,7 @@ src/
   pages/
     LandingPage/
       sections/                Hero, overview, showcase, and latest work sections
+    LoginPage/                 Reusable login modal component
   services/                    API service layer
   store/                       Global state
 ```
@@ -115,6 +118,19 @@ The landing page is composed in `src/pages/LandingPage/index.jsx`:
 - `OverviewSection`
 - `BestShowcaseSection`
 - `LatestWorkSection`
+- `WhyChooseSection`
+
+## Login Modal
+
+The login experience is rendered as an in-page modal instead of a separate route. The profile icon in `src/components/layout/Navbar.jsx` opens `src/pages/LoginPage/index.jsx`.
+
+The modal includes:
+
+- Email and password fields
+- Clickable password show/hide control
+- Google sign-in button styling
+- Backdrop click, close button, and Escape-key dismissal
+- Desktop illustration using `src/assets/image/loginImage.png`
 
 ## Styling
 

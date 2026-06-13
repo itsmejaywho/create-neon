@@ -1,73 +1,75 @@
 import { useEffect, useState } from 'react'
-import createIcon from '../../assets/icons/create.svg'
-import cartIcon from '../../assets/icons/cart.svg'
-import checkIcon from '../../assets/icons/check.svg'
-import homeIcon from '../../assets/icons/home.svg'
-import happyIcon from '../../assets/icons/happy.svg'
-import boxIcon from '../../assets/icons/box.svg'
-import shopIcon from '../../assets/icons/shop.svg'
-import signIcon from '../../assets/icons/sign.svg'
-import signageIcon from '../../assets/icons/signage.svg'
-import trendingIcon from '../../assets/icons/trending.svg'
 import logoImage from '../../assets/image/logo.png'
-import { Search } from '@/components/animate-ui/icons/search'
-import { User } from '@/components/animate-ui/icons/user'
+import LoginModal from '../../pages/LoginPage'
 import {
-  ChevronDown,
+  BadgeCheck,
+  ChevronLeft,
   ChevronRight,
-  Folder,
-  Home,
-  Lightbulb,
+  House,
   Menu,
+  PackageCheck,
+  PanelTop,
+  PenTool,
+  Search,
   ShoppingBag,
-  Sparkles,
-  Store,
+  ShoppingCart,
+  Signpost,
+  Smile,
+  TrendingUp,
+  User,
 } from 'lucide-react'
 
 const navIcons = [
-  { src: homeIcon, label: 'Home' },
-  { src: shopIcon, label: 'Shop' },
-  { src: createIcon, label: 'Create Neon Sign' },
-  { src: signIcon, label: 'Business Neon Sign' },
-  { src: signageIcon, label: 'Business Signage' },
-  { src: trendingIcon, label: 'Inspire Me' },
+  { Icon: House, label: 'Home', href: '/' },
+  { Icon: ShoppingBag, label: 'Shop' },
+  { Icon: PenTool, label: 'Create Neon Sign' },
+  { Icon: Signpost, label: 'Business Neon Sign' },
+  { Icon: PanelTop, label: 'Business Signage' },
+  { Icon: TrendingUp, label: 'Inspire Me' },
 ]
 
-const mobileNavLinks = [
-  { label: 'Home', icon: Home, color: 'text-[#f2994a]', href: '#' },
+const mobileMenuLinks = [
+  { label: 'Home', href: '/' },
   {
     label: 'Shop',
-    icon: ShoppingBag,
-    color: 'text-[#34c759]',
     children: ['All Products', 'Custom Neon Signs', 'LED Signs'],
   },
-  { label: 'Create Neon', icon: Sparkles, color: 'text-[#0a84ff]', href: '#' },
-  {
-    label: 'Business Neon',
-    icon: Lightbulb,
-    color: 'text-[#5856d6]',
-    href: '#',
-  },
+  { label: 'Create Neon', href: '#' },
+  { label: 'Business Neon', href: '#' },
   {
     label: 'Business Signage',
-    icon: Store,
-    color: 'text-[#ff3b30]',
     children: ['Outdoor Signs', 'Storefront Signs', 'Logo Signs'],
   },
-  { label: 'Inspire Me', icon: Folder, color: 'text-[#5856d6]', href: '#' },
+  { label: 'Inspire Me', href: '#' },
 ]
 
 function IconNav() {
   return (
     <div className="flex w-full items-center justify-evenly">
-      {navIcons.map((icon) => (
-        <img
-          key={icon.label}
-          src={icon.src}
-          alt={icon.label}
-          className="h-5 w-5 sm:h-6 sm:w-6"
-        />
-      ))}
+      {navIcons.map(({ Icon, label, href }) => {
+        const icon = (
+          <Icon
+            aria-label={label}
+            role="img"
+            className="h-5 w-5 stroke-[1.8] text-[#001E2B] sm:h-6 sm:w-6"
+          />
+        )
+
+        if (href) {
+          return (
+            <a
+              key={label}
+              href={href}
+              aria-label={label}
+              className="grid h-9 w-9 place-items-center rounded-full transition hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00684A]"
+            >
+              {icon}
+            </a>
+          )
+        }
+
+        return <span key={label}>{icon}</span>
+      })}
     </div>
   )
 }
@@ -85,13 +87,17 @@ function MobileTextNav({ menuOpen, onToggleMenu }) {
         <Menu size={19} strokeWidth={1.8} />
       </button>
 
-      <div className="min-w-0 flex-1 text-center">
+      <a
+        href="/"
+        aria-label="Go to home page"
+        className="min-w-0 flex-1 text-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00684A]"
+      >
         <img
           src={logoImage}
           alt="All About Neon"
           className="mx-auto h-25 w-auto object-contain"
         />
-      </div>
+      </a>
 
       <button
         type="button"
@@ -105,102 +111,61 @@ function MobileTextNav({ menuOpen, onToggleMenu }) {
 }
 
 function MobileMenuSheet({ isOpen, onClose }) {
-  const [openSection, setOpenSection] = useState(null)
-
   if (!isOpen) {
     return null
   }
 
   return (
-    <>
+    <div className="fixed inset-0 z-[120] lg:hidden">
       <button
         type="button"
         aria-label="Close navigation menu"
-        className="fixed inset-0 z-[90] bg-black/35 lg:hidden"
+        className="absolute inset-0 bg-black/10"
         onClick={onClose}
       />
-      <div className="fixed inset-x-0 bottom-0 z-[100] lg:hidden">
-        <div className="mx-auto flex h-[24rem] w-full max-w-md flex-col rounded-t-[22px] bg-white px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-18px_50px_rgba(0,0,0,0.25)]">
-          <div className="relative mb-5 flex h-7 items-center justify-center">
-            <button
-              type="button"
-              className="absolute left-0 text-md font-medium text-black/35"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <p className="text-md font-extrabold text-black">Menu</p>
-          </div>
+      <aside className="relative h-full w-[min(76vw,18rem)] bg-[#fafafa] px-10 pt-9 shadow-[10px_0_24px_rgba(0,0,0,0.08)]">
+        <button
+          type="button"
+          className="mb-7 flex items-center gap-1 text-[0.62rem] font-medium uppercase tracking-wide text-black/65"
+          onClick={onClose}
+        >
+          <ChevronLeft size={12} strokeWidth={1.7} />
+          Menu
+        </button>
 
-          <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pb-8 pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {mobileNavLinks.map(({ label, icon: LinkIcon, color, href, children }) => {
-              const hasChildren = Boolean(children)
-              const isExpanded = openSection === label
-              const itemClass =
-                'flex w-full items-center gap-4 text-left text-[.8rem] font-semibold text-black'
+        <nav aria-label="Mobile navigation">
+          <ul className="space-y-5">
+            {mobileMenuLinks.map(({ label, href = '#', children }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  onClick={onClose}
+                  className="block text-[0.62rem] font-semibold uppercase tracking-wide text-black transition hover:text-black/55"
+                >
+                  {label}
+                </a>
 
-              return (
-                <div key={label}>
-                  {hasChildren ? (
-                    <button
-                      type="button"
-                      aria-expanded={isExpanded}
-                      className={itemClass}
-                      onClick={() =>
-                        setOpenSection((currentSection) =>
-                          currentSection === label ? null : label,
-                        )
-                      }
-                    >
-                      <LinkIcon className={color} size={20} strokeWidth={1.9} />
-                      <span className="flex-1">{label}</span>
-                      <ChevronDown
-                        className={[
-                          'text-black/35 transition-transform',
-                          isExpanded ? 'rotate-180' : '',
-                        ].join(' ')}
-                        size={16}
-                        strokeWidth={2}
-                      />
-                    </button>
-                  ) : (
-                    <a href={href} onClick={onClose} className={itemClass}>
-                      <LinkIcon className={color} size={20} strokeWidth={1.9} />
-                      <span>{label}</span>
-                    </a>
-                  )}
-
-                  {hasChildren && isExpanded && (
-                    <div className="ml-9 mt-3 space-y-2">
-                      {children.map((child) => {
-                        const childLabel =
-                          typeof child === 'string' ? child : child.label
-                        const ChildIcon =
-                          typeof child === 'string' ? ChevronRight : child.icon
-
-                        return (
-                          <button
-                            key={childLabel}
-                            type="button"
-                            className="flex w-full items-center gap-3 rounded-xl bg-black/[0.04] px-3 py-2 text-left text-xs font-semibold text-black/65"
-                            onClick={onClose}
-                          >
-                            <ChildIcon size={15} strokeWidth={2} />
-                            <span>{childLabel}</span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="mx-auto h-1.5 w-36 rounded-full bg-black" />
-        </div>
-      </div>
-    </>
+                {children && (
+                  <ul className="mt-4 space-y-3">
+                    {children.map((child) => (
+                      <li key={child}>
+                        <a
+                          href="#"
+                          onClick={onClose}
+                          className="block pl-4 text-[0.58rem] font-medium uppercase tracking-wide text-black/55 transition hover:text-black"
+                        >
+                          {child}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    </div>
   )
 }
 
@@ -215,7 +180,7 @@ function MobileNav({ menuOpen, onToggleMenu }) {
 function TextNav() {
   return (
     <div className="font-euclid hidden w-full items-center justify-evenly gap-3 text-xs font-medium uppercase text-[#001E2B] lg:flex xl:gap-4 xl:text-sm">
-      <a href="#">Home</a>
+      <a href="/">Home</a>
       <a href="#" className="flex items-center gap-1">
         Shop
         <span aria-hidden="true">v</span>
@@ -240,9 +205,10 @@ function TextNav() {
   )
 }
 
-export default function Navbar() {
+export default function Navbar({ onLogin }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
 
   useEffect(() => {
     function handleScroll() {
@@ -286,32 +252,40 @@ export default function Navbar() {
           ].join(' ')}
         >
           <div className="flex h-full basis-[18%] items-center justify-start gap-2 pl-3 sm:basis-1/5 sm:pl-4 lg:justify-center lg:pl-0">
-            <div
+            <a
+              href="/"
+              aria-label="Go to home page"
               className={[
-                'font-euclid h-10 w-10 items-center justify-center rounded-full sm:h-11 sm:w-11',
-                scrolled
-                  ? 'bg-gradient-to-br from-[#00ED64] via-[#00B3FF] to-[#7C4DFF] p-[2px]'
-                  : 'border-4 border-[#00684A] bg-white text-[#001E2B]',
-                scrolled ? 'flex' : 'flex lg:hidden',
+                'inline-flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00684A]',
+                scrolled ? '' : 'lg:block',
               ].join(' ')}
             >
               <div
                 className={[
-                  'flex h-full w-full items-center justify-center rounded-full',
-                  scrolled ? 'bg-[#0b0f14] text-white' : 'bg-transparent',
+                  'font-euclid h-10 w-10 items-center justify-center rounded-full sm:h-11 sm:w-11',
+                  scrolled
+                    ? 'flex bg-gradient-to-br from-[#00ED64] via-[#00B3FF] to-[#7C4DFF] p-[2px]'
+                    : 'hidden border-4 border-[#00684A] bg-white text-[#001E2B] lg:hidden',
                 ].join(' ')}
               >
-                <p className="text-base font-black sm:text-[15px]">AAN</p>
+                <div
+                  className={[
+                    'flex h-full w-full items-center justify-center rounded-full',
+                    scrolled ? 'bg-[#0b0f14] text-white' : 'bg-transparent',
+                  ].join(' ')}
+                >
+                  <p className="text-base font-black sm:text-[15px]">AAN</p>
+                </div>
               </div>
-            </div>
-            <img
-              src={logoImage}
-              alt="All About Neon"
-              className={[
-                'h-35 w-auto object-contain',
-                scrolled ? 'hidden' : 'hidden lg:block',
-              ].join(' ')}
-            />
+              <img
+                src={logoImage}
+                alt="All About Neon"
+                className={[
+                  'h-35 w-auto object-contain',
+                  scrolled ? 'hidden' : 'hidden lg:block',
+                ].join(' ')}
+              />
+            </a>
           </div>
           {scrolled && (
             <div
@@ -344,18 +318,25 @@ export default function Navbar() {
           >
             <div className="hidden w-full items-center justify-center gap-7 lg:flex">
               <Search
-                animateOnHover
                 size={22}
+                strokeWidth={1.8}
                 aria-label="Search"
+                role="img"
                 className="text-[#001E2B]"
               />
-              <User
-                animateOnHover
-                size={22}
-                aria-label="Profile"
-                className="text-[#001E2B]"
+              <button
+                type="button"
+                aria-label="Open login modal"
+                onClick={() => setLoginOpen(true)}
+                className="grid h-9 w-9 place-items-center rounded-full text-[#001E2B] transition hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#001E2B]"
+              >
+                <User size={22} strokeWidth={1.8} aria-hidden="true" />
+              </button>
+              <ShoppingCart
+                aria-label="Cart"
+                role="img"
+                className="h-5 w-5 stroke-[1.8] text-[#001E2B]"
               />
-              <img src={cartIcon} alt="Cart" className="h-5 w-5" />
             </div>
             <button
               type="button"
@@ -376,23 +357,28 @@ export default function Navbar() {
         >
           <div className="flex items-center gap-6 text-xs font-semibold uppercase tracking-wide text-[#001E2B]">
             <span className="flex items-center gap-2">
-              <img src={checkIcon} alt="Check" className="h-4 w-4" />
+              <BadgeCheck aria-hidden="true" className="h-4 w-4 stroke-[1.8]" />
               2 Years Warranty
             </span>
             <span className="h-1 w-1 rounded-full bg-[#001E2B]" aria-hidden="true" />
             <span className="flex items-center gap-2">
-              <img src={happyIcon} alt="Happy" className="h-4 w-4" />
+              <Smile aria-hidden="true" className="h-4 w-4 stroke-[1.8]" />
               Happy Customer
             </span>
             <span className="h-1 w-1 rounded-full bg-[#001E2B]" aria-hidden="true" />
             <span className="flex items-center gap-2">
-              <img src={boxIcon} alt="Box" className="h-4 w-4" />
+              <PackageCheck aria-hidden="true" className="h-4 w-4 stroke-[1.8]" />
               Fast and Free Shipping
             </span>
           </div>
         </div>
       </nav>
       <MobileMenuSheet isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <LoginModal
+        isOpen={loginOpen}
+        onClose={() => setLoginOpen(false)}
+        onLogin={onLogin}
+      />
     </header>
   )
 }

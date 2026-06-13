@@ -1,4 +1,4 @@
-import starIcon from '../../../assets/icons/star.svg'
+import { Star } from 'lucide-react'
 import heroBackground from '../../../assets/image/hero-background.jpg'
 
 export default function HeroSection() {
@@ -13,7 +13,10 @@ export default function HeroSection() {
           <span className="h-4 w-px bg-white/40" aria-hidden="true" />
           <span className="flex items-center gap-2">
             <span className="inline-flex h-5 w-5 items-center justify-center rounded-full">
-              <img src={starIcon} alt="" className="h-5 w-5" aria-hidden="true" />
+              <Star
+                aria-hidden="true"
+                className="h-5 w-5 fill-current stroke-[1.8]"
+              />
             </span>
             Trustpilot
           </span>

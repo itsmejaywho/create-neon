@@ -1,13 +1,14 @@
 export default function Footer() {
   const quickLinks = [
-    'Home',
-    'Shop',
-    'Create Neon Sign',
-    'Business Neon Sign',
-    'Business Signage',
-    'Inspire Me',
-    'About',
-    'Contact',
+    { label: 'Home', href: '/' },
+    { label: 'Shop', href: '#' },
+    { label: 'Create Neon Sign', href: '#' },
+    { label: 'Business Neon Sign', href: '#' },
+    { label: 'Business Signage', href: '#' },
+    { label: 'Inspire Me', href: '#' },
+    { label: 'FAQ', href: '/faq' },
+    { label: 'About', href: '#' },
+    { label: 'Contact', href: '#' },
   ]
 
   return (
@@ -36,12 +37,12 @@ export default function Footer() {
           <nav aria-label="Footer navigation">
             <ul className="space-y-4">
               {quickLinks.map((link) => (
-                <li key={link}>
+                <li key={link.label}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-base font-medium text-white underline underline-offset-2 transition hover:text-[#00ED64]"
                   >
-                    {link}
+                    {link.label}
                   </a>
                 </li>
               ))}
