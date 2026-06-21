@@ -8,21 +8,29 @@ export async function verifyUserPassword({ username, password }) {
     throw new Error('Supabase login settings are missing.')
   }
 
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/rpc/verify_user_password`,
-    {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_PUBLISHABLE_KEY,
-        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        'Content-Type': 'application/json',
+  let response
+
+  try {
+    response = await fetch(
+      `${SUPABASE_URL.replace(/\/+$/, '')}/rest/v1/rpc/verify_user_password`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input_username: username,
+          input_password: password,
+        }),
       },
-      body: JSON.stringify({
-        input_username: username,
-        input_password: password,
-      }),
-    },
-  )
+    )
+  } catch {
+    throw new Error(
+      'The login service could not be reached. Check the Supabase project URL in .env.local.',
+    )
+  }
 
   if (!response.ok) {
     const message = await response.text()

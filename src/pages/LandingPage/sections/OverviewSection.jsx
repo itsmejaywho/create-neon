@@ -6,6 +6,7 @@ import {
   Wrench,
   Zap,
 } from 'lucide-react'
+import Reveal from '../../../components/layout/Reveal'
 import customImage from '../../../assets/image/custom.webp'
 import personalImage from '../../../assets/image/personal.webp'
 import ownImage from '../../../assets/image/own.webp'
@@ -39,35 +40,35 @@ const benefits = [
   {
     title: 'Free & fast shipping',
     description:
-      'Free shipping available! Need it faster? Choose Express Shipping for prompt delivery of your custom neon sign.',
+      'Free shipping available. Need it faster? Choose express shipping for prompt delivery.',
     Icon: Truck,
     iconBackground: 'bg-pink-200',
   },
   {
     title: '2-year guarantee',
     description:
-      'Do you fear e-shopping because of defective products? Fret no more! We will replace your sign in case of any malfunction.',
+      'If there is a problem with the product, we will make it right and replace it when needed.',
     Icon: ShieldCheck,
     iconBackground: 'bg-green-200',
   },
   {
     title: 'Affordable prices',
     description:
-      'We promise affordable neon signs. Share your competitors’ quotes with us and we will beat their price.',
+      'We keep pricing competitive and can review a comparable quote if you already have one.',
     Icon: BadgeDollarSign,
     iconBackground: 'bg-yellow-200',
   },
   {
     title: 'High efficiency',
     description:
-      'Create Neon signs are hand-made from unbreakable PVC flex that is lighter and stronger than glass tubes.',
+      'Create Neon signs are handmade from durable PVC flex that is lighter and stronger than glass tubes.',
     Icon: Zap,
     iconBackground: 'bg-red-100',
   },
   {
     title: 'Free dimmer and remote',
     description:
-      'Your cart is filled with freebies! Get a free dimmer, remote controller, installation kit, and installation guide.',
+      'Your order includes a dimmer, remote controller, installation kit, and installation guide.',
     Icon: RadioReceiver,
     iconBackground: 'bg-sky-200',
   },
@@ -84,7 +85,7 @@ function OptionCard({ id, title, description, image, imageAlt }) {
   return (
     <div
       id={id}
-      className="flex min-h-125 scroll-mt-24 flex-col gap-4 rounded-2xl border border-black/15 p-4"
+      className="group flex min-h-125 scroll-mt-24 flex-col gap-4 rounded-[1.5rem] border border-black/12 bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_48px_rgba(0,0,0,0.08)]"
     >
       <div className="h-32 shrink-0">
         <h3 className="min-h-14 text-2xl font-bold uppercase leading-snug text-[#001E2B]">
@@ -94,11 +95,11 @@ function OptionCard({ id, title, description, image, imageAlt }) {
           {description}
         </p>
       </div>
-      <div className="group h-84 w-full shrink-0 overflow-hidden rounded-2xl border border-black/10">
+      <div className="h-84 w-full shrink-0 overflow-hidden rounded-2xl border border-black/10">
         <img
           src={image}
           alt={imageAlt}
-          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
         />
       </div>
     </div>
@@ -107,13 +108,16 @@ function OptionCard({ id, title, description, image, imageAlt }) {
 
 function BenefitsLayout() {
   return (
-    <section className="-mx-4 mt-15  px-4 py-14 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-      <div className="mx-auto max-w-6xl rounded-3xl bg-gray-100 border-2 px-6 py-12 sm:px-10 lg:px-16 lg:py-16">
+    <section className="-mx-4 mt-15 px-4 py-14 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
+      <div className="mx-auto max-w-6xl rounded-[2rem] border border-black/8 bg-[#f5f7f6] px-6 py-12 shadow-[0_18px_48px_rgba(0,0,0,0.05)] sm:px-10 lg:px-16 lg:py-16">
         <div className="grid gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
           {benefits.map(({ title, description, Icon, iconBackground }) => (
-            <div key={title} className="flex flex-col items-center text-center">
+            <div
+              key={title}
+              className="flex flex-col items-center text-center transition-transform duration-300 hover:-translate-y-1"
+            >
               <div
-                className={`flex h-16 w-16 items-center justify-center rounded-full ${iconBackground}`}
+                className={`flex h-16 w-16 items-center justify-center rounded-full ${iconBackground} shadow-[0_10px_24px_rgba(0,0,0,0.08)]`}
               >
                 <Icon
                   aria-hidden="true"
@@ -138,32 +142,41 @@ export default function OverviewSection() {
   return (
     <section
       id="premium-signs"
-      className="relative z-10 -mt-8 min-h-[80vh] w-full scroll-mt-24 rounded-t-3xl bg-white px-4 py-10 shadow-[0_-6px_20px_rgba(0,0,0,0.15)] sm:px-6 lg:px-10"
+      className="relative z-10 -mt-8 min-h-[80vh] w-full scroll-mt-24 rounded-t-[2rem] bg-white px-4 py-10 shadow-[0_-10px_30px_rgba(0,0,0,0.12)] sm:px-6 lg:px-10"
     >
       <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-2 lg:gap-12">
-        <div>
-          <h2 className="text-xl font-extrabold uppercase text-[#00684A] sm:text-2xl">
-            Create Neon USA is the world's most cost-effective source of LED
-            neon signs & illuminated signage
-          </h2>
-          <div className="mt-4 h-0.5 w-full bg-black/10" aria-hidden="true" />
-        </div>
-        <p className="text-sm leading-relaxed text-[#222222] sm:text-base">
-          Light up your world with high-quality Create Neon signs for
-          businesses, storefronts, offices, as well as home, bar events,
-          weddings, birthdays, or any other occasion. We can help you add glow
-          to your business logo, slogan, family name, or even your favorite
-          video game icon.
-        </p>
+        <Reveal>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#00684A]">
+              Design your glow
+            </p>
+            <h2 className="mt-3 max-w-xl text-3xl font-extrabold uppercase leading-tight text-[#001E2B] sm:text-4xl">
+              Custom neon signs built for brands, spaces, and moments
+            </h2>
+            <div className="mt-4 h-0.5 w-24 bg-[#00ED64]" aria-hidden="true" />
+          </div>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="text-sm leading-relaxed text-[#222222] sm:text-base">
+            From storefront logos to wedding backdrops and home decor, we shape
+            bright signage that feels personal, premium, and easy to order.
+            Bring a sketch, a logo, or a rough idea and we&apos;ll help turn it
+            into a sign that actually looks finished.
+          </p>
+        </Reveal>
       </div>
 
       <div className="mx-auto mt-10 grid w-full max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {optionCards.map((card) => (
-          <OptionCard key={card.title} {...card} />
+        {optionCards.map((card, index) => (
+          <Reveal key={card.title} delay={index * 100}>
+            <OptionCard {...card} />
+          </Reveal>
         ))}
       </div>
 
-      <BenefitsLayout />
+      <Reveal delay={160}>
+        <BenefitsLayout />
+      </Reveal>
     </section>
   )
 }

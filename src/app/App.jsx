@@ -3,11 +3,11 @@ import FaqPage from '../pages/FaqPage'
 import LandingPage from '../pages/LandingPage'
 import SettingsPage from '../pages/SettingsPage'
 import ScrollToTopButton from '../components/layout/ScrollToTopButton'
+import { ROUTES } from '../constants/routes'
 
 const SESSION_KEY = 'create-neon-user'
 const SESSION_DURATION_MS = 8 * 60 * 60 * 1000
 const FAQ_PATH = '/faq'
-const SETTINGS_PATH = '/settings'
 
 function isAdminUser(user) {
   return user?.username === 'admin' && user?.role === 'admin'
@@ -48,21 +48,22 @@ function createSession(user) {
 
 function getAllowedPath(session) {
   const path = window.location.pathname
-  const isProtectedPath = path === SETTINGS_PATH || path === '/dashboard'
+  const isProtectedPath =
+    path === ROUTES.settings || path === ROUTES.dashboard
 
-  if (path === '/' && session) {
-    window.history.replaceState({}, '', SETTINGS_PATH)
-    return SETTINGS_PATH
+  if (path === ROUTES.home && session) {
+    window.history.replaceState({}, '', ROUTES.settings)
+    return ROUTES.settings
   }
 
   if (isProtectedPath && !session) {
-    window.history.replaceState({}, '', '/')
-    return '/'
+    window.history.replaceState({}, '', ROUTES.home)
+    return ROUTES.home
   }
 
-  if (path === '/dashboard' && session) {
-    window.history.replaceState({}, '', SETTINGS_PATH)
-    return SETTINGS_PATH
+  if (path === ROUTES.dashboard && session) {
+    window.history.replaceState({}, '', ROUTES.settings)
+    return ROUTES.settings
   }
 
   return path
@@ -73,7 +74,7 @@ export default function App() {
   const [currentPath, setCurrentPath] = useState(() =>
     getAllowedPath(readSession()),
   )
-  const isProtectedRoute = currentPath === SETTINGS_PATH
+  const isProtectedRoute = currentPath === ROUTES.settings
 
   useEffect(() => {
     function handlePopState() {
@@ -107,14 +108,14 @@ export default function App() {
     const nextSession = createSession(authenticatedUser)
     setSession(nextSession)
     window.localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
-    navigate(SETTINGS_PATH, { replace: true })
+    navigate(ROUTES.settings, { replace: true })
     return true
   }
 
   function handleLogout() {
     setSession(null)
     window.localStorage.removeItem(SESSION_KEY)
-    navigate('/')
+    navigate(ROUTES.home)
   }
 
   let page = <LandingPage onLogin={handleLogin} />

@@ -1,3 +1,4 @@
+import Reveal from '../../../components/layout/Reveal'
 import workImage1 from '../../../assets/image/1.jpg'
 import workImage2 from '../../../assets/image/2.jpg'
 import workImage3 from '../../../assets/image/3.jpg'
@@ -7,7 +8,7 @@ import workImage5 from '../../../assets/image/5.jpg'
 const workCards = [
   {
     title: 'Symbols',
-    description: 'Art / Sysmbols',
+    description: 'Art / Symbols',
     image: workImage1,
     imageAlt: 'Neon sign sample',
   },
@@ -30,8 +31,8 @@ const workCards = [
     imageAlt: 'Neon sign sample',
   },
   {
-    title: 'Big Brands',
-    description: 'Art / Big Brand / Neon',
+    title: 'Retail Spaces',
+    description: 'Art / Storefront / Neon',
     image: workImage5,
     imageAlt: 'Neon sign sample',
   },
@@ -39,40 +40,49 @@ const workCards = [
 
 export default function LatestWorkSection() {
   return (
-    <section className="relative overflow-hidden py-12 text-white border-t-[white] rounded-t-[30px]">
-      <div className="absolute inset-0" aria-hidden="true" />
+    <section className="relative overflow-hidden rounded-t-[30px] border-t border-black/5 bg-[#f7f8fb] py-14 text-black sm:py-16">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,237,100,0.08),transparent_30%)]" />
 
-      <div className="relative mx-auto w-full text-black">
-        <div className="flex flex-col items-center text-center">
-          <h2 className="text-5xl font-extrabold uppercase leading-none text-black sm:text-6xl lg:text-7xl">
-            Latest Work
-          </h2>
-          <div className="mt-6 h-1.5 w-20 bg-black sm:w-24" />
-          <p className="mt-3 w-full max-w-3xl rounded-sm  px-4 py-2 text-xl font-semibold ">
-            We have a large track record with creating custom neon signs in Los Angeles.
-          </p>
-        </div>
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
+        <Reveal>
+          <div className="flex flex-col items-center text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#00684A]">
+              Latest work
+            </p>
+            <h2 className="mt-3 text-4xl font-extrabold uppercase leading-none sm:text-5xl lg:text-6xl">
+              Recent signs we&apos;re proud of
+            </h2>
+            <div className="mt-5 h-1.5 w-24 rounded-full bg-[#00ED64]" />
+            <p className="mt-4 w-full max-w-3xl text-base font-medium leading-7 text-black/72 sm:text-lg">
+              A few recent builds across food, music, retail, and branded
+              interiors. Each one balances readability, personality, and the
+              glow you actually want in a finished space.
+            </p>
+          </div>
+        </Reveal>
 
-        <div className="mx-auto mt-10 grid w-full  sm:w-[90vw] sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mt-12 grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {workCards.map((card, index) => (
-            <article key={`${card.title}-${index}`} className="group min-w-0">
-              <div className="group relative mx-auto aspect-[1] h-[calc(80%-20px)] overflow-hidden border border-white/15 bg-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.22)]">
-                <img
-                  src={card.image}
-                  alt={card.imageAlt}
-                  className="h-full w-full object-cover transition duration-200 group-hover:brightness-75"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-              </div>
-              <div className="flex flex-col items-center pt-6 text-center">
-                <p className="text-sm font-extrabold uppercase tracking-wide text-black">
-                  {card.title}
-                </p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black/70">
-                  {card.description}
-                </p>
-              </div>
-            </article>
+            <Reveal key={`${card.title}-${index}`} delay={index * 90}>
+              <article className="group min-w-0">
+                <div className="relative aspect-[1] overflow-hidden rounded-[1.5rem] border border-black/10 bg-white shadow-[0_14px_32px_rgba(0,0,0,0.08)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)]">
+                  <img
+                    src={card.image}
+                    alt={card.imageAlt}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04] group-hover:brightness-[0.92]"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(0,0,0,0.35))] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                </div>
+                <div className="flex flex-col items-center pt-5 text-center">
+                  <p className="text-sm font-extrabold uppercase tracking-wide text-black">
+                    {card.title}
+                  </p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-black/60">
+                    {card.description}
+                  </p>
+                </div>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>
