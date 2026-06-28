@@ -53,12 +53,14 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
         return
       }
 
-      onClose()
       const loggedIn = onLogin(user)
 
       if (!loggedIn) {
         setStatusMessage('You do not have access to this page.')
+        return
       }
+
+      onClose()
     } catch (error) {
       setStatusMessage(error.message)
     } finally {
