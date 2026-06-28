@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Eye, EyeOff, X } from 'lucide-react'
 import loginImage from '../../assets/image/loginImage.png'
-import { verifyUserPassword } from '../../lib/supabaseAuth'
+import { verifyUserPassword } from '../../lib/authApi'
 
 export default function LoginModal({ isOpen, onClose, onLogin }) {
   const [username, setUsername] = useState('')

@@ -1,7 +1,20 @@
+import { useState } from 'react'
 import { Star } from 'lucide-react'
 import heroBackground from '../../../assets/image/hero-background.jpg'
+import CreateNeonModal from '../../../components/feedback/CreateNeonModal'
+import NeonDesigner from '../../../components/feedback/NeonDesigner'
 
 export default function HeroSection() {
+  const [createNeonOpen, setCreateNeonOpen] = useState(false)
+  const [designerOpen, setDesignerOpen] = useState(false)
+
+  function handleSelectNeonType(optionId) {
+    setCreateNeonOpen(false)
+    if (optionId === 'text') {
+      setDesignerOpen(true)
+    }
+  }
+
   return (
     <section
       className="flex min-h-[90vh] w-full items-center bg-cover bg-center px-4 py-10 sm:px-6 lg:px-10"
@@ -46,14 +59,25 @@ export default function HeroSection() {
           >
             Premium Illuminated Signs
           </a>
-          <a
-            href="#create-neon"
-            className="rounded-full bg-[#ff2aa1] px-5 py-3 text-xs font-semibold uppercase tracking-wide text-white"
+          <button
+            type="button"
+            onClick={() => setCreateNeonOpen(true)}
+            className="cursor-pointer rounded-full bg-[#ff2aa1] px-5 py-3 text-xs font-semibold uppercase tracking-wide text-white transition-transform duration-200 hover:-translate-y-0.5"
           >
             Create Your Neon
-          </a>
+          </button>
         </div>
       </div>
+
+      <CreateNeonModal
+        open={createNeonOpen}
+        onClose={() => setCreateNeonOpen(false)}
+        onSelect={handleSelectNeonType}
+      />
+      <NeonDesigner
+        open={designerOpen}
+        onClose={() => setDesignerOpen(false)}
+      />
     </section>
   )
 }

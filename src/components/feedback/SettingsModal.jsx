@@ -220,8 +220,80 @@ function TermsPanel() {
   )
 }
 
+function Skeleton({ className = '' }) {
+  return (
+    <div className={`animate-pulse rounded bg-[#ececec] ${className}`} />
+  )
+}
+
+function SettingsSkeleton() {
+  return (
+    <>
+      <section>
+        <Skeleton className="h-5 w-32" />
+        <Skeleton className="mt-3 h-4 w-3/4" />
+
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-11 w-11 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-3.5 w-28" />
+              <Skeleton className="h-3 w-20" />
+            </div>
+          </div>
+          <Skeleton className="h-11 w-11 rounded-lg" />
+        </div>
+      </section>
+
+      <section className="mt-7 border-t border-[#f0f0f0] pt-6">
+        <Skeleton className="h-5 w-44" />
+        <Skeleton className="mt-3 h-4 w-5/6" />
+
+        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index}>
+              <Skeleton className="mb-2 h-3.5 w-24" />
+              <Skeleton className="h-11 w-full rounded-lg" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-7 border-t border-[#f0f0f0] pt-6">
+        <Skeleton className="h-5 w-28" />
+        <Skeleton className="mt-3 h-4 w-2/3" />
+
+        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <div key={index}>
+              <Skeleton className="mb-2 h-3.5 w-24" />
+              <Skeleton className="h-11 w-full rounded-lg" />
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
+
 export default function SettingsModal({ open, onClose }) {
   const [activeId, setActiveId] = useState('account')
+  const [prevOpen, setPrevOpen] = useState(open)
+  const [loading, setLoading] = useState(false)
+
+  // Reset to the loading state each time the modal opens.
+  if (open !== prevOpen) {
+    setPrevOpen(open)
+    if (open) setLoading(true)
+  }
+
+  // Simulate fetching the settings data before showing it.
+  useEffect(() => {
+    if (!loading) return undefined
+
+    const timeout = setTimeout(() => setLoading(false), 800)
+    return () => clearTimeout(timeout)
+  }, [loading])
 
   useEffect(() => {
     if (!open) return undefined
@@ -315,9 +387,15 @@ export default function SettingsModal({ open, onClose }) {
           </header>
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
-            {activeId === 'account' && <AccountInfoPanel />}
-            {activeId === 'payment' && <PaymentDetailsPanel />}
-            {activeId === 'terms' && <TermsPanel />}
+            {loading ? (
+              <SettingsSkeleton />
+            ) : (
+              <>
+                {activeId === 'account' && <AccountInfoPanel />}
+                {activeId === 'payment' && <PaymentDetailsPanel />}
+                {activeId === 'terms' && <TermsPanel />}
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -204,6 +204,19 @@ body {
   .pulse-glow {
     animation: pulse-glow 5s ease-in-out infinite;
   }
+
+  .neon-rgb {
+    animation: neon-hue 6s linear infinite;
+  }
+}
+
+@keyframes neon-hue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
 }
 
 @keyframes float-slow {
@@ -239,5 +252,8 @@ body {
     transition: none !important;
     transform: none !important;
     opacity: 1 !important;
+  }
+  .neon-rgb {
+    animation: neon-hue 6s linear infinite !important;
   }
 }
