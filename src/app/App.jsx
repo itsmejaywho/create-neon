@@ -9,6 +9,10 @@ const SESSION_KEY = 'create-neon-user'
 const SESSION_DURATION_MS = 8 * 60 * 60 * 1000
 const FAQ_PATH = '/faq'
 
+function isFaqPath(path) {
+  return path === FAQ_PATH || path.startsWith(`${FAQ_PATH}/`)
+}
+
 function isAdminUser(user) {
   return user?.username === 'admin' && user?.role === 'admin'
 }
@@ -122,7 +126,7 @@ export default function App() {
 
   if (isProtectedRoute && session) {
     page = <SettingsPage user={session.user} onLogout={handleLogout} />
-  } else if (currentPath === FAQ_PATH) {
+  } else if (isFaqPath(currentPath)) {
     page = <FaqPage onLogin={handleLogin} />
   }
 
