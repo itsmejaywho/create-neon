@@ -2,16 +2,24 @@ import { useState } from 'react'
 import { Star } from 'lucide-react'
 import heroBackground from '../../../assets/image/hero-background.jpg'
 import CreateNeonModal from '../../../components/feedback/CreateNeonModal'
+import LogoDesignQuote from '../../../components/feedback/LogoDesignQuote'
 import NeonDesigner from '../../../components/feedback/NeonDesigner'
+import { ROUTES } from '../../../constants/routes'
 
-export default function HeroSection() {
+export default function HeroSection({ currentPath, navigate }) {
   const [createNeonOpen, setCreateNeonOpen] = useState(false)
-  const [designerOpen, setDesignerOpen] = useState(false)
+  const designerOpen = currentPath === ROUTES.textDesigner
+  const logoQuoteOpen = currentPath === ROUTES.logoDesign
 
   function handleSelectNeonType(optionId) {
     setCreateNeonOpen(false)
     if (optionId === 'text') {
-      setDesignerOpen(true)
+      navigate(ROUTES.textDesigner)
+      return
+    }
+
+    if (optionId === 'logo') {
+      navigate(ROUTES.logoDesign)
     }
   }
 
@@ -76,7 +84,14 @@ export default function HeroSection() {
       />
       <NeonDesigner
         open={designerOpen}
-        onClose={() => setDesignerOpen(false)}
+        onClose={() => navigate(ROUTES.home)}
+      />
+      <LogoDesignQuote
+        open={logoQuoteOpen}
+        onClose={() => navigate(ROUTES.home)}
+        onOpenTextDesigner={() => {
+          navigate(ROUTES.textDesigner)
+        }}
       />
     </section>
   )

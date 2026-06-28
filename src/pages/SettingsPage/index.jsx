@@ -110,21 +110,40 @@ function truncateText(value, maxLength) {
 }
 
 function buildOrderViewModel(order) {
-  const itemCount = Math.max(
-    1,
-    String(order.text || '')
-      .split('\n')
-      .filter((line) => line.trim().length > 0).length,
-  )
+  const isLogoDesign = getOrderType(order) === 'logo-design'
+  const itemCount = isLogoDesign
+    ? 1
+    : Math.max(
+        1,
+        String(order.text || '')
+          .split('\n')
+          .filter((line) => line.trim().length > 0).length,
+      )
 
   return {
     ...order,
-    code: `#CDHT${String(order.id).padStart(4, '0')}`,
-    locationSummary: truncateText(order.locationLabel || 'Unknown location', 22),
+    code: isLogoDesign
+      ? `#LGD${String(order.recordId || 0).padStart(4, '0')}`
+      : `#CDHT${String(order.recordId || 0).padStart(4, '0')}`,
+    locationSummary: truncateText(
+      order.locationLabel || order.usage || 'Unknown location',
+      22,
+    ),
     itemMeta: `${itemCount} item${itemCount === 1 ? '' : 's'}`,
     dateLabel: formatOrderDate(order.submittedAt),
-    totalLabel: `$${Number(order.quotedPrice || 0).toLocaleString()}`,
+    totalLabel: Number.isFinite(Number(order.quotedPrice))
+      ? `$${Number(order.quotedPrice).toLocaleString()}`
+      : 'Quote pending',
+    customerLabel:
+      [order.firstName, order.lastName].filter(Boolean).join(' ') || 'Unknown customer',
+    contactLabel: order.workEmail || [order.phoneDialCode, order.phoneNumber].filter(Boolean).join(' '),
+    summaryLabel: truncateText(order.text || order.description || 'No summary provided', 34),
+    typeLabel: isLogoDesign ? 'Logo & Design' : 'Text',
   }
+}
+
+function getOrderType(order) {
+  return order.orderType === 'logo-design' ? 'logo-design' : 'text'
 }
 
 function compareOrdersBySubmission(left, right) {
@@ -135,7 +154,7 @@ function compareOrdersBySubmission(left, right) {
     return leftTime - rightTime
   }
 
-  return Number(left.id || 0) - Number(right.id || 0)
+  return Number(left.recordId || 0) - Number(right.recordId || 0)
 }
 
 function mergeOrderList(existingOrders, incomingOrder) {
@@ -195,8 +214,9 @@ export default function DashboardPage({ user, token, onLogout }) {
   }, [token])
 
   const totalOrders = orders.length
-  const indoorOrders = orders.filter(
-    (order) => order.locationId === 'indoors',
+  const textOrders = orders.filter((order) => getOrderType(order) === 'text').length
+  const logoDesignOrders = orders.filter(
+    (order) => getOrderType(order) === 'logo-design',
   ).length
   const totalQuotedValue = orders.reduce(
     (sum, order) => sum + Number(order.quotedPrice || 0),
@@ -207,12 +227,14 @@ export default function DashboardPage({ user, token, onLogout }) {
     [orders],
   )
   const filteredOrders = useMemo(() => {
-    if (activeOrderTab === 'open' || activeOrderTab === 'unfulfilled') {
-      return decoratedOrders.filter((order) => order.locationId === 'outdoors')
+    if (activeOrderTab === 'text') {
+      return decoratedOrders.filter((order) => getOrderType(order) === 'text')
     }
 
-    if (activeOrderTab === 'unpaid') {
-      return decoratedOrders.filter((order) => order.quotedPrice >= 500)
+    if (activeOrderTab === 'logo-design') {
+      return decoratedOrders.filter(
+        (order) => getOrderType(order) === 'logo-design',
+      )
     }
 
     return decoratedOrders
@@ -311,7 +333,8 @@ export default function DashboardPage({ user, token, onLogout }) {
                 </div>
               ) : activePage === 'dashboard' ? (
                 <DashboardOverview
-                  indoorOrders={indoorOrders}
+                  logoDesignOrders={logoDesignOrders}
+                  textOrders={textOrders}
                   orders={decoratedOrders}
                   totalOrders={totalOrders}
                   totalQuotedValue={totalQuotedValue}
@@ -329,19 +352,14 @@ export default function DashboardPage({ user, token, onLogout }) {
                           onClick={() => setActiveOrderTab('all')}
                         />
                         <OrderTab
-                          active={activeOrderTab === 'open'}
-                          label="Outdoor"
-                          onClick={() => setActiveOrderTab('open')}
+                          active={activeOrderTab === 'text'}
+                          label={`Text (${textOrders})`}
+                          onClick={() => setActiveOrderTab('text')}
                         />
                         <OrderTab
-                          active={activeOrderTab === 'unfulfilled'}
-                          label="Indoor"
-                          onClick={() => setActiveOrderTab('unfulfilled')}
-                        />
-                        <OrderTab
-                          active={activeOrderTab === 'unpaid'}
-                          label="Large"
-                          onClick={() => setActiveOrderTab('unpaid')}
+                          active={activeOrderTab === 'logo-design'}
+                          label={`Logo & Design (${logoDesignOrders})`}
+                          onClick={() => setActiveOrderTab('logo-design')}
                         />
                       </div>
 
@@ -352,85 +370,13 @@ export default function DashboardPage({ user, token, onLogout }) {
                     </div>
 
                     <div className="flex-1 overflow-x-auto">
-                      <div className="min-w-[1180px]">
-                        <div className="grid grid-cols-[1fr_1.4fr_1fr_0.8fr_0.8fr_0.8fr_0.9fr_0.9fr] gap-4 border-b border-[#f0f0f0] bg-[#fafafa] px-5 py-4 text-xs font-semibold uppercase tracking-wide text-[#7a7a7a]">
-                          <div>Order ID</div>
-                          <div>Text</div>
-                          <div>Font</div>
-                          <div>Color</div>
-                          <div>Width</div>
-                          <div>Height</div>
-                          <div>Location</div>
-                          <div>Price</div>
-                        </div>
-
-                        <div className="divide-y divide-[#f5f5f5]">
-                          {paginatedOrders.map((order) => (
-                            <div
-                              key={order.id}
-                              className="grid grid-cols-[1fr_1.4fr_1fr_0.8fr_0.8fr_0.8fr_0.9fr_0.9fr] gap-4 px-5 py-4 text-sm"
-                            >
-                              <div className="flex items-start gap-3">
-                                <input
-                                  type="checkbox"
-                                  aria-label={`Select order ${order.code}`}
-                                  className="mt-1 h-4 w-4 rounded border-[#d8d8d8]"
-                                />
-                                <div>
-                                  <p className="font-semibold text-black">
-                                    {order.code}
-                                  </p>
-                                  <p className="mt-1 text-xs text-[#7a7a7a]">
-                                    {order.itemMeta}
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-black">
-                                  {truncateText(order.text, 34)}
-                                </p>
-                                <p className="mt-1 text-xs text-[#7a7a7a]">
-                                  Submitted {order.dateLabel}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-black">
-                                  {order.fontName || order.fontId}
-                                </p>
-                                <p className="mt-1 text-xs text-[#7a7a7a]">{order.alignment}</p>
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-black">
-                                  {order.colorName}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-black">{order.widthCm} cm</p>
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-black">{order.heightCm} cm</p>
-                              </div>
-
-                              <div>
-                                <p className="font-medium text-black">
-                                  {order.locationSummary}
-                                </p>
-                              </div>
-
-                              <div>
-                                <p className="font-semibold text-black">
-                                  {order.totalLabel}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      {activeOrderTab === 'all' ? (
+                        <AllOrdersTable orders={paginatedOrders} />
+                      ) : activeOrderTab === 'logo-design' ? (
+                        <LogoDesignOrdersTable orders={paginatedOrders} />
+                      ) : (
+                        <TextOrdersTable orders={paginatedOrders} />
+                      )}
                     </div>
 
                     <div className="flex flex-col gap-4 border-t border-[#f0f0f0] px-5 py-4 text-sm text-[#6b6b6b] lg:flex-row lg:items-center lg:justify-between">
@@ -523,8 +469,248 @@ function ActionButton({ icon: Icon, label }) {
   )
 }
 
+function OrderIdentityCell({ order }) {
+  return (
+    <div className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        aria-label={`Select order ${order.code}`}
+        className="mt-1 h-4 w-4 rounded border-[#d8d8d8]"
+      />
+      <div>
+        <p className="font-semibold text-black">{order.code}</p>
+        <p className="mt-1 text-xs text-[#7a7a7a]">{order.itemMeta}</p>
+      </div>
+    </div>
+  )
+}
+
+function LogoDesignPreview({ order, compact = false }) {
+  if (!order.fileUrl) {
+    return (
+      <div>
+        <p className="font-medium text-black">{order.summaryLabel}</p>
+        <p className="mt-1 text-xs text-[#7a7a7a]">
+          {order.fileName || 'No uploaded file'}
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className={['min-w-0', compact ? 'max-w-[16rem]' : ''].join(' ')}>
+      <a
+        href={order.fileUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="mb-3 block w-fit overflow-hidden rounded-xl border border-[#ececec] bg-[#fafafa]"
+      >
+        <img
+          src={order.fileUrl}
+          alt={order.fileName || 'Uploaded logo design'}
+          className="h-14 w-14 object-cover"
+          loading="lazy"
+        />
+      </a>
+      <p className="font-medium text-black">{order.summaryLabel}</p>
+      <p className="mt-1 truncate text-xs text-[#7a7a7a]">
+        {order.fileName || 'Uploaded file'}
+      </p>
+    </div>
+  )
+}
+
+function AllOrdersTable({ orders }) {
+  return (
+    <div className="min-w-[1180px]">
+      <div className="grid grid-cols-[1fr_1.8fr_1fr_1fr_1fr_0.9fr] gap-4 border-b border-[#f0f0f0] bg-[#fafafa] px-5 py-4 text-xs font-semibold uppercase tracking-wide text-[#7a7a7a]">
+        <div>Order ID</div>
+        <div>Text</div>
+        <div>Customer</div>
+        <div>Submitted</div>
+        <div>Details</div>
+        <div>Price</div>
+      </div>
+
+      <div className="divide-y divide-[#f5f5f5]">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="grid grid-cols-[1fr_1.8fr_1fr_1fr_1fr_0.9fr] gap-4 px-5 py-4 text-sm"
+          >
+            <OrderIdentityCell order={order} />
+            <div>
+              {getOrderType(order) === 'logo-design' ? (
+                <LogoDesignPreview order={order} compact />
+              ) : (
+                <>
+                  <p className="font-medium text-black">{order.summaryLabel}</p>
+                  <p className="mt-1 text-xs text-[#7a7a7a]">
+                    {order.fontName || order.fontId}
+                  </p>
+                </>
+              )}
+            </div>
+            <div>
+              <p className="font-medium text-black">{order.customerLabel}</p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">{order.contactLabel || 'No contact'}</p>
+            </div>
+            <div>
+              <p className="font-medium text-black">{order.dateLabel}</p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">
+                {formatSubmittedAt(order.submittedAt)}
+              </p>
+            </div>
+            <div>
+              <p className="font-medium text-black">
+                {getOrderType(order) === 'logo-design'
+                  ? order.locationSummary
+                  : `${order.widthCm} x ${order.heightCm} cm`}
+              </p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">
+                {getOrderType(order) === 'logo-design'
+                  ? order.sizeNeeded
+                  : order.locationSummary}
+              </p>
+            </div>
+            <div>
+              <p className="font-medium text-black">{order.totalLabel}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function TextOrdersTable({ orders }) {
+  return (
+    <div className="min-w-[1180px]">
+      <div className="grid grid-cols-[1fr_1.4fr_1fr_0.8fr_0.8fr_0.8fr_0.9fr_0.9fr] gap-4 border-b border-[#f0f0f0] bg-[#fafafa] px-5 py-4 text-xs font-semibold uppercase tracking-wide text-[#7a7a7a]">
+        <div>Order ID</div>
+        <div>Text</div>
+        <div>Font</div>
+        <div>Color</div>
+        <div>Width</div>
+        <div>Height</div>
+        <div>Location</div>
+        <div>Price</div>
+      </div>
+
+      <div className="divide-y divide-[#f5f5f5]">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="grid grid-cols-[1fr_1.4fr_1fr_0.8fr_0.8fr_0.8fr_0.9fr_0.9fr] gap-4 px-5 py-4 text-sm"
+          >
+            <OrderIdentityCell order={order} />
+
+            <div>
+              <p className="font-medium text-black">{order.summaryLabel}</p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">Submitted {order.dateLabel}</p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.fontName || order.fontId}</p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">{order.alignment}</p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.colorName}</p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.widthCm} cm</p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.heightCm} cm</p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.locationSummary}</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-black">{order.totalLabel}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function LogoDesignOrdersTable({ orders }) {
+  return (
+    <div className="min-w-[1240px]">
+      <div className="grid grid-cols-[1fr_1.1fr_1.5fr_1fr_0.9fr_0.9fr_0.9fr_1.2fr] gap-4 border-b border-[#f0f0f0] bg-[#fafafa] px-5 py-4 text-xs font-semibold uppercase tracking-wide text-[#7a7a7a]">
+        <div>Order ID</div>
+        <div>Customer</div>
+        <div>Design</div>
+        <div>Technology</div>
+        <div>Size</div>
+        <div>Quantity</div>
+        <div>Usage</div>
+        <div>Contact</div>
+      </div>
+
+      <div className="divide-y divide-[#f5f5f5]">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="grid grid-cols-[1fr_1.1fr_1.5fr_1fr_0.9fr_0.9fr_0.9fr_1.2fr] gap-4 px-5 py-4 text-sm"
+          >
+            <OrderIdentityCell order={order} />
+
+            <div>
+              <p className="font-medium text-black">{order.customerLabel}</p>
+              <p className="mt-1 text-xs text-[#7a7a7a] capitalize">
+                {order.customerType || 'Customer'}
+              </p>
+            </div>
+
+            <div>
+              <LogoDesignPreview order={order} />
+            </div>
+
+            <div>
+              <p className="font-medium text-black">
+                {order.technologyNeeded || 'Not selected'}
+              </p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">
+                Submitted {order.dateLabel}
+              </p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.sizeNeeded || 'Not selected'}</p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.quantityNeeded || 'Not selected'}</p>
+            </div>
+
+            <div>
+              <p className="font-medium capitalize text-black">
+                {order.usage || order.locationSummary}
+              </p>
+            </div>
+
+            <div>
+              <p className="font-medium text-black">{order.contactLabel || 'No contact'}</p>
+              <p className="mt-1 text-xs text-[#7a7a7a]">{order.workEmail || order.phoneNumber}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function DashboardOverview({
-  indoorOrders,
+  logoDesignOrders,
+  textOrders,
   orders,
   totalOrders,
   totalQuotedValue,
@@ -535,7 +721,11 @@ function DashboardOverview({
     <div className="flex h-full flex-col gap-5">
       <div className="grid gap-4 md:grid-cols-3">
         <SummaryCard label="Total orders" value={String(totalOrders)} />
-        <SummaryCard label="Indoor orders" value={String(indoorOrders)} />
+        <SummaryCard label="Text orders" value={String(textOrders)} />
+        <SummaryCard label="Logo design orders" value={String(logoDesignOrders)} />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-1">
         <SummaryCard
           label="Quoted value"
           value={`$${totalQuotedValue.toLocaleString()}`}
@@ -551,14 +741,15 @@ function DashboardOverview({
               className="rounded-xl border border-[#f0f0f0] bg-white p-4"
             >
               <p className="text-xs font-semibold uppercase tracking-wide text-[#7a7a7a]">
-                Order #{order.id}
+                {order.typeLabel} {order.code}
               </p>
               <p className="mt-1 text-base font-semibold text-black">
-                {order.text}
+                {order.summaryLabel}
               </p>
               <p className="mt-1 text-sm text-[#6b6b6b]">
-                {order.colorName} / {order.locationLabel} / $
-                {Number(order.quotedPrice).toLocaleString()}
+                {getOrderType(order) === 'logo-design'
+                  ? `${order.customerLabel} / ${order.technologyNeeded} / ${order.locationSummary}`
+                  : `${order.colorName} / ${order.locationLabel} / $${Number(order.quotedPrice).toLocaleString()}`}
               </p>
             </div>
           ))}

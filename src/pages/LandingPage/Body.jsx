@@ -4,10 +4,10 @@ import BestShowcaseSection from './sections/BestShowcaseSection'
 import LatestWorkSection from './sections/LatestWorkSection'
 import WhyChooseSection from './sections/WhyChooseSection'
 
-export default function Body() {
+export default function Body({ currentPath, navigate }) {
   return (
     <main className="flex min-h-screen flex-col">
-      <HeroSection />
+      <HeroSection currentPath={currentPath} navigate={navigate} />
       <OverviewSection />
       <BestShowcaseSection />
       <LatestWorkSection />

@@ -57,6 +57,11 @@ function getAllowedPath(session) {
   const path = window.location.pathname
   const isProtectedPath =
     path === ROUTES.settings || path === ROUTES.dashboard
+  const isPublicPath =
+    path === ROUTES.home ||
+    path === ROUTES.textDesigner ||
+    path === ROUTES.logoDesign ||
+    isFaqPath(path)
 
   if (path === ROUTES.home && session) {
     window.history.replaceState({}, '', ROUTES.settings)
@@ -71,6 +76,11 @@ function getAllowedPath(session) {
   if (path === ROUTES.dashboard && session) {
     window.history.replaceState({}, '', ROUTES.settings)
     return ROUTES.settings
+  }
+
+  if (!session && !isPublicPath) {
+    window.history.replaceState({}, '', ROUTES.home)
+    return ROUTES.home
   }
 
   return path
@@ -125,7 +135,13 @@ export default function App() {
     navigate(ROUTES.home)
   }
 
-  let page = <LandingPage onLogin={handleLogin} />
+  let page = (
+    <LandingPage
+      currentPath={currentPath}
+      navigate={navigate}
+      onLogin={handleLogin}
+    />
+  )
 
   if (isProtectedRoute && session) {
     page = (

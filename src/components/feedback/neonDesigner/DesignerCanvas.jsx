@@ -1,4 +1,5 @@
-import { Eye, Share2, X } from 'lucide-react'
+import { Eye, Share2 } from 'lucide-react'
+import OverlayCloseButton from '../../ui/OverlayCloseButton'
 
 export default function DesignerCanvas({
   activeColor,
@@ -19,14 +20,11 @@ export default function DesignerCanvas({
 }) {
   return (
     <div className="relative flex min-h-[22rem] shrink-0 flex-col lg:h-full lg:min-h-0 lg:flex-1">
-      <button
-        type="button"
-        aria-label="Close designer"
+      <OverlayCloseButton
+        ariaLabel="Close designer"
         onClick={onClose}
-        className="absolute left-4 top-4 z-10 grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-white/10 text-white transition-colors duration-200 hover:bg-white/20"
-      >
-        <X size={18} strokeWidth={1.8} />
-      </button>
+        className="absolute left-4 top-4 z-10"
+      />
 
       <div className="flex flex-1 items-center justify-center px-4 pb-4 pt-16 sm:p-6">
         <div
