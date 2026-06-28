@@ -1,7 +1,7 @@
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:4000').replace(/\/+$/, '')
 
-// Verifies credentials against the local backend (createneon-backend).
-// Returns the user object on success, null on invalid credentials,
+// Verifies credentials against the backend.
+// Returns `{ token, user }` on success, null on invalid credentials,
 // and throws for network/server errors.
 export async function verifyUserPassword({ username, password }) {
   let response
@@ -35,6 +35,5 @@ export async function verifyUserPassword({ username, password }) {
     throw new Error(message)
   }
 
-  const body = await response.json()
-  return body?.user ?? body
+  return await response.json()
 }

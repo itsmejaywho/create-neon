@@ -28,6 +28,8 @@ function readSession() {
     const session = JSON.parse(savedSession)
     const isValidSession =
       isAdminUser(session.user) &&
+      typeof session.token === 'string' &&
+      session.token.length > 0 &&
       typeof session.expiresAt === 'number' &&
       session.expiresAt > Date.now()
 
@@ -43,9 +45,10 @@ function readSession() {
   }
 }
 
-function createSession(user) {
+function createSession(authenticatedSession) {
   return {
-    user,
+    user: authenticatedSession.user,
+    token: authenticatedSession.token,
     expiresAt: Date.now() + SESSION_DURATION_MS,
   }
 }
@@ -104,12 +107,12 @@ export default function App() {
     setCurrentPath(path)
   }
 
-  function handleLogin(authenticatedUser) {
-    if (!isAdminUser(authenticatedUser)) {
+  function handleLogin(authenticatedSession) {
+    if (!isAdminUser(authenticatedSession?.user)) {
       return false
     }
 
-    const nextSession = createSession(authenticatedUser)
+    const nextSession = createSession(authenticatedSession)
     setSession(nextSession)
     window.localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
     navigate(ROUTES.settings, { replace: true })
@@ -125,7 +128,13 @@ export default function App() {
   let page = <LandingPage onLogin={handleLogin} />
 
   if (isProtectedRoute && session) {
-    page = <SettingsPage user={session.user} onLogout={handleLogout} />
+    page = (
+      <SettingsPage
+        user={session.user}
+        token={session.token}
+        onLogout={handleLogout}
+      />
+    )
   } else if (isFaqPath(currentPath)) {
     page = <FaqPage onLogin={handleLogin} />
   }

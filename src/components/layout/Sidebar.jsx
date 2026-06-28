@@ -29,6 +29,7 @@ const mainNav = [
       { id: 'insights', label: 'Insights' },
     ],
   },
+  { id: 'orders', label: 'Orders', icon: Box },
   { id: 'contracts', label: 'Contracts', icon: FileText },
   { id: 'payments', label: 'Payments', icon: CreditCard },
   { id: 'notification', label: 'Notification', icon: Bell },
@@ -219,14 +220,21 @@ function MainItem({ item, collapsed, activeId, openId, onToggle, onSelect }) {
   )
 }
 
-export default function Sidebar({ user, onLogout, defaultCollapsed = false }) {
+export default function Sidebar({
+  user,
+  onLogout,
+  defaultCollapsed = false,
+  activeId: controlledActiveId,
+  onActiveChange,
+}) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
-  const [activeId, setActiveId] = useState('insights')
+  const [uncontrolledActiveId, setUncontrolledActiveId] = useState('orders')
   const [openId, setOpenId] = useState('dashboard')
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [profileMenuRender, setProfileMenuRender] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const profileRef = useRef(null)
+  const activeId = controlledActiveId ?? uncontrolledActiveId
 
   const displayName = user?.username ? user.username : 'John Doe'
   const role = user?.role ? user.role : 'Designer'
@@ -235,6 +243,14 @@ export default function Sidebar({ user, onLogout, defaultCollapsed = false }) {
 
   function handleToggleSection(id) {
     setOpenId((current) => (current === id ? null : id))
+  }
+
+  function handleSelect(nextId) {
+    if (controlledActiveId === undefined) {
+      setUncontrolledActiveId(nextId)
+    }
+
+    onActiveChange?.(nextId)
   }
 
   // Close the profile menu when clicking outside of it.
@@ -356,7 +372,7 @@ export default function Sidebar({ user, onLogout, defaultCollapsed = false }) {
                 activeId={activeId}
                 openId={openId}
                 onToggle={handleToggleSection}
-                onSelect={setActiveId}
+                onSelect={handleSelect}
               />
             ))}
           </nav>

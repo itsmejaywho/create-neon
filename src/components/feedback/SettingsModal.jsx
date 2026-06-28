@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CreditCard, Pencil, ScrollText, UserRound, X } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const navItems = [
   {
@@ -220,12 +221,6 @@ function TermsPanel() {
   )
 }
 
-function Skeleton({ className = '' }) {
-  return (
-    <div className={`animate-pulse rounded bg-[#ececec] ${className}`} />
-  )
-}
-
 function SettingsSkeleton() {
   return (
     <>
@@ -278,22 +273,26 @@ function SettingsSkeleton() {
 
 export default function SettingsModal({ open, onClose }) {
   const [activeId, setActiveId] = useState('account')
-  const [prevOpen, setPrevOpen] = useState(open)
   const [loading, setLoading] = useState(false)
 
-  // Reset to the loading state each time the modal opens.
-  if (open !== prevOpen) {
-    setPrevOpen(open)
-    if (open) setLoading(true)
-  }
-
-  // Simulate fetching the settings data before showing it.
+  // Show the same loading treatment whenever the modal opens
+  // or the user switches between settings sections.
   useEffect(() => {
-    if (!loading) return undefined
+    if (!open) {
+      setLoading(false)
+      return undefined
+    }
 
+    setLoading(true)
     const timeout = setTimeout(() => setLoading(false), 800)
     return () => clearTimeout(timeout)
-  }, [loading])
+  }, [activeId, open])
+
+  useEffect(() => {
+    if (!open) {
+      setActiveId('account')
+    }
+  }, [open])
 
   useEffect(() => {
     if (!open) return undefined

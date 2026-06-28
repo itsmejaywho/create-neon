@@ -38,22 +38,24 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
     setIsSubmitting(true)
 
     try {
-      const user = await verifyUserPassword({
+      const authResult = await verifyUserPassword({
         username: username.trim(),
         password,
       })
 
-      if (!user) {
+      if (!authResult?.user) {
         setStatusMessage('Invalid username or password.')
         return
       }
+
+      const user = authResult.user
 
       if (user.role !== 'admin') {
         setStatusMessage('You do not have access to this page.')
         return
       }
 
-      const loggedIn = onLogin(user)
+      const loggedIn = onLogin(authResult)
 
       if (!loggedIn) {
         setStatusMessage('You do not have access to this page.')

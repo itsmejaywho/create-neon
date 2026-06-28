@@ -135,6 +135,7 @@ export default function NeonDesigner({ open, onClose }) {
     () => locations.find((location) => location.id === locationId) ?? locations[0],
     [locationId],
   )
+  const activeFontLabel = activeFont.label || activeFont.name || font
   const activePresetId = useMemo(
     () =>
       sizePresets.find((preset) => preset.w === width && preset.h === height)?.id,
@@ -210,7 +211,7 @@ export default function NeonDesigner({ open, onClose }) {
         text,
         alignment: align,
         fontId: font,
-        fontName: activeFont.name,
+        fontName: activeFontLabel,
         colorId,
         colorName: activeColor.name,
         widthCm: width,
